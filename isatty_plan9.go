@@ -1,20 +1,20 @@
-//go:build !windows && !plan9
+//go:build plan9
 
 package tint
 
 import (
 	"os"
-	"syscall"
-	"unsafe"
 )
 
 // IsTerminal reports whether the given file descriptor is a terminal.
+// On Plan9, we check if /dev/cons can be opened.
 func IsTerminal(fd uintptr) bool {
-	var ws [8]byte // struct winsize: 4 x uint16
-	// TIOCGWINSZ = 0x5413 on Linux, 0x40087468 on Darwin/BSD.
-	// Use the platform-specific value via tiocgwinsz const.
-	_, _, err := syscall.Syscall(syscall.SYS_IOCTL, fd, uintptr(tiocgwinsz), uintptr(unsafe.Pointer(&ws[0])))
-	return err == 0
+	f, err := os.Open("/dev/cons")
+	if err != nil {
+		return false
+	}
+	f.Close()
+	return true
 }
 
 // isStdoutTerminal reports whether os.Stdout is a terminal.
