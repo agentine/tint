@@ -277,3 +277,8 @@ func noColorFromEnv() bool {
 func Unset() {
 	_, _ = fmt.Fprint(Output, "\033[0m")
 }
+
+// Internal fmt wrappers used by hicolor.go to avoid import cycle issues.
+func sprint(a ...interface{}) string        { return fmt.Sprint(a...) }
+func sprintf(f string, a ...interface{}) string { return fmt.Sprintf(f, a...) }
+func sprintln(a ...interface{}) string      { return fmt.Sprintln(a...) }
