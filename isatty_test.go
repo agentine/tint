@@ -26,8 +26,8 @@ func TestIsTerminalPipe(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer r.Close()
-	defer w.Close()
+	defer func() { _ = r.Close() }()
+	defer func() { _ = w.Close() }()
 
 	if IsTerminal(r.Fd()) {
 		t.Fatal("pipe read end should not be a terminal")

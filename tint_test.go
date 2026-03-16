@@ -382,22 +382,22 @@ func TestAllAttributes(t *testing.T) {
 func TestNoColorEnvVar(t *testing.T) {
 	// Test that noColorFromEnv respects NO_COLOR.
 	orig := os.Getenv("NO_COLOR")
-	defer os.Setenv("NO_COLOR", orig)
+	defer func() { _ = os.Setenv("NO_COLOR", orig) }()
 
-	os.Setenv("NO_COLOR", "1")
+	t.Setenv("NO_COLOR", "1")
 	if !noColorFromEnv() {
 		t.Fatal("expected noColorFromEnv to return true when NO_COLOR=1")
 	}
 
-	os.Setenv("NO_COLOR", "")
+	t.Setenv("NO_COLOR", "")
 	origTerm := os.Getenv("TERM")
-	defer os.Setenv("TERM", origTerm)
-	os.Setenv("TERM", "dumb")
+	defer func() { _ = os.Setenv("TERM", origTerm) }()
+	t.Setenv("TERM", "dumb")
 	if !noColorFromEnv() {
 		t.Fatal("expected noColorFromEnv to return true when TERM=dumb")
 	}
 
-	os.Setenv("TERM", "xterm")
+	t.Setenv("TERM", "xterm")
 	if noColorFromEnv() {
 		t.Fatal("expected noColorFromEnv to return false")
 	}
