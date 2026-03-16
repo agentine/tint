@@ -132,16 +132,16 @@ func TestCompatUnset(t *testing.T) {
 func TestCompatTypeAlias(t *testing.T) {
 	// Verify Color type alias works — a *Color returned by New()
 	// should be assignable to *tint.Color.
-	var c *tint.Color = New(FgRed)
-	_ = c
+	c := New(FgRed)
+	var _ *tint.Color = c //nolint:staticcheck // intentional type compatibility check
 }
 
 func TestCompatAttributeAlias(t *testing.T) {
-	// Verify Attribute type alias.
-	var a tint.Attribute = FgRed
-	_ = a
-	var b Attribute = tint.FgRed
-	_ = b
+	// Verify Attribute type alias — both directions.
+	a := FgRed
+	var _ tint.Attribute = a //nolint:staticcheck // intentional type compatibility check
+	b := tint.FgRed
+	var _ Attribute = b //nolint:staticcheck // intentional type compatibility check
 }
 
 func TestAllStdPrintFunctions(t *testing.T) {
